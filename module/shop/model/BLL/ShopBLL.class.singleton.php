@@ -6,7 +6,7 @@
 
         function __construct() {
             $this->shopDAO = ShopDAO::getInstance();
-            $this->db = DB_Connection::getInstance();
+            $this->db = Connection::getInstance();
         }
 
         public static function getInstance() {

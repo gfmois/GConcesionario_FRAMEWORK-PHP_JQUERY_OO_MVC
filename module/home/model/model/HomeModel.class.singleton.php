@@ -1,4 +1,5 @@
 <?php
+    // require 'module/home/model/DLL/HomeBLL.class.singleton.php';
     class HomeModel {
         private $bll;
         static $_instance;

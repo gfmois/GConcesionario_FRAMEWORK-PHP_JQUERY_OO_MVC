@@ -9,7 +9,7 @@
             return self::$_instance;
         }
 
-        public function getAllData(DB_Connection $db, $page) {
+        public function getAllData(Connection $db, $page) {
             $page = $page - 1;
             $limitPage = $page * 8;
 
@@ -25,7 +25,7 @@
             );
         }
 
-        public function getDataCars(DB_Connection $db) {
+        public function getDataCars(Connection $db) {
             $sql = "SELECT * FROM brand b; 
                     SELECT * FROM model m; 
                     SELECT * FROM type t; 
@@ -37,7 +37,7 @@
             return $stmt;
         }
 
-        public function getDataFromCar(DB_Connection $db, $id) {
+        public function getDataFromCar(Connection $db, $id) {
             $sql = "SELECT c.*, b.*, m.* 
                     FROM cars c, brand b, model m 
                     WHERE c.id = $id 
@@ -60,7 +60,7 @@
             return $stmt;
         }
 
-        public function getDataFromFilteredCars(DB_Connection $db, Array $filters, int $pagination) {
+        public function getDataFromFilteredCars(Connection $db, Array $filters, int $pagination) {
             if ($pagination != null || 0) $pagination = $pagination - 1;
 
             $limitPage = $pagination * 8;
@@ -143,7 +143,7 @@
             }
         }
 
-        public function addCountToCar(DB_Connection $db, $carVIN) {
+        public function addCountToCar(Connection $db, $carVIN) {
             $sql = "UPDATE cars 
                     SET count = count + 1 
                     WHERE vin_number = ";
@@ -157,7 +157,7 @@
             if ($stmt) return "Success"; else return "Error";
         }
 
-        // public function getDataFromLikes(DB_Connection $db, String $token) {
+        // public function getDataFromLikes(Connection $db, String $token) {
             
         // }
     }    

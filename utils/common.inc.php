@@ -22,14 +22,12 @@
         }
 
         public static function loadModel($model, $function = null, $args = null) {
-            $dir = strToArray($model, "Model");
-            $path = constant('MODEL_' . strtoupper($dir[0])) .  $model . '.class.singleton.php';
-
+            $dir = strToArray($model);
+            $path = constant('MODEL_' . strtoupper($dir[1])) .  $model . '.class.singleton.php';
             if (file_exists($path)) {
                 require_once ($path);
                 if (method_exists($model, $function)) {
-                    $obj = new $model();
-                    $obj::getInstance();
+                    $obj = $model::getInstance();
                     if ($args != null) {
                         return call_user_func(array($obj, $function), $args);
                     }
