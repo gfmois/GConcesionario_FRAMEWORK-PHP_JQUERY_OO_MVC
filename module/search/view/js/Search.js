@@ -35,7 +35,8 @@ $(document).ready(function() {
 
     pausedPromise(600).then(() => {
         if (catCB.val() == "-" && brandCB.val() == "-") {
-            ajaxPromise('GET', 'module/search/controller/SearchController.php?op=cat', 'json').then((response) => {
+            ajaxPromise('POST', friendlyURL("?page=search&op=types"), 'json').then((response) => {
+                console.log(response);
                 $.each(response, function(indexInArray, item) {
                     let catOption = document.createElement('option')
 
@@ -46,7 +47,8 @@ $(document).ready(function() {
                 });
             })
 
-            ajaxPromise('GET', 'module/search/controller/SearchController.php?op=brand', 'json').then((response) => {
+            ajaxPromise('GET', friendlyURL("?page=search&op=brands"), 'json').then((response) => {
+                console.log(response);
                 $.each(response, function(indexInArray, item) {
                     let brandOption = document.createElement('option')
 
@@ -108,9 +110,10 @@ $(document).ready(function() {
         // searchOptions.id_brand = $(this).val();
     })
 
+    console.log('A');
     let categorySelect = document.getElementById('catCB')
     let brandSelect = document.getElementById('brCB')
-    // let searchResponse = [];
+        // let searchResponse = [];
 
     // $('.catCB, .brandCB').change(function() {
     //     ajaxPromise('POST', 'module/search/controller/SearchController.php?op=change', 'json', searchOptions).then((response) => {
@@ -143,7 +146,7 @@ $(document).ready(function() {
     //                     console.log('B');
     //                     console.log(searchResponse[index].id_cat);
     //                     console.log(item.id_cat);
-    
+
     //                 }
     //             }
     //         });
@@ -151,8 +154,7 @@ $(document).ready(function() {
     // })
 
     $('.searchBtn').on('click', function() {
-        params.set('module', 'shop')
-
+        // FIXME: URL
         window.history.replaceState({}, '', `${window.location.pathname}?${params}`)
         window.location.reload()
     })

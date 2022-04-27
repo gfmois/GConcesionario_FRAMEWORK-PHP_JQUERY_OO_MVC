@@ -47,6 +47,12 @@
     define('MODEL_SHOP', MODULES_PATH . 'shop/model/model/');
     define('JS_VIEW_SHOP', SITE_PATH . 'module/shop/view/js/');
     define ('VIEW_PATH_SHOP', MODULES_PATH . 'shop/view/');
+
+    // MODEL_SEARCH
+    define('MODEL_SEARCH', MODULES_PATH . 'search/model/model/');
+    define('DAO_SEARCH', MODULES_PATH . 'search/model/DAO/');
+    define("BLL_SEARCH", MODULES_PATH . 'search/model/BLL');
+
     
     //MODEL_CONTACT
     define('MODEL_CONTACT', MODULES_PATH . 'contact/model/model/');
