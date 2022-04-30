@@ -1,17 +1,36 @@
 function checkContactInfo() {
+    let allComplete = false;
     let contactInfo = {
         name: document.getElementById('nameInput').value.length != 0 ? document.getElementById('nameInput').value : 0,
-        account: document.getElementById('emailInput').value.length != 0 ? document.getElementById('emailInput').value : 0,
+        email: document.getElementById('emailInput').value.length != 0 ? document.getElementById('emailInput').value : 0,
         text: document.getElementById('textInput').value.length != 0 ? document.getElementById('textInput').value : 0,
         theme: document.getElementById('themeInput').value.length != 0 ? document.getElementById('themeInput').value : 0
     }
 
-    ajaxPromise('POST', friendlyURL('?page=contact&op=sendContactMessage'), 'json', contactInfo).then((res) => {
-        console.log(res.result.message);
-    })
-}
+    for (const contactValue in contactInfo) {
+        if (contactInfo[contactValue] == 0) {
+            toastr["error"](`El campo ${contactValue} está vacio.`, "Uno de los campos está vacio.")
+            allComplete = false;
+        } else {
+            allComplete = true;
+        }
+    }
 
-function sendContactInfo() {
+    if (allComplete != false) {
+        ajaxPromise('POST', friendlyURL('?page=contact&op=sendContactMessage'), 'json', contactInfo).then((res) => {
+            Swal.fire({
+                title: 'Mensaje Enviado',
+                text: res.result.message,
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+            }).then((op) => {
+                if (op.isConfirmed) {
+                    window.history.replaceState({}, '', `${window.location.pathname.replace('contact', 'home')}`)
+                    window.location.reload()
+                }
+            })
+        })
+    }
 }
 
 $(document).ready(function () {

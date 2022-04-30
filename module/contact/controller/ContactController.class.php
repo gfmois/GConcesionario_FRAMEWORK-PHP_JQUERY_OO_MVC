@@ -5,7 +5,7 @@
         }
 
         function sendContactMessage() {
-            echo json_encode(Mailer::getInstance()->generateMail($_POST['name'], $_POST['account'], $_POST["text"], $_POST['theme']));
+            echo json_encode(Mailer::getInstance()->generateMail($_POST['name'], $_POST['email'], $_POST["text"], $_POST['theme']));
         }
     }
 
