@@ -1,4 +1,4 @@
-import { loadCars } from './ShopController.js'
+import { loadCars } from './Shop.js'
 import { setLocalStorage } from './setLocalStorage.js'
 import { pagination } from './pagination.js'
 

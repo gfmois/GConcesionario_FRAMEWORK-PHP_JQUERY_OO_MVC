@@ -29,6 +29,7 @@
         } else if (file_exists(SITE_ROOT . 'utils/' . $module . '.inc.php')) {
             set_include_path(SITE_ROOT . 'utils/');
             spl_autoload($module);
+            require_once SITE_ROOT . 'utils/' . $module . '.inc.php';
         }
     }
 ?>

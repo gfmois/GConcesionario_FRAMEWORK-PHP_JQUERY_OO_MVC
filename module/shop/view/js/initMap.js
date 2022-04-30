@@ -1,4 +1,4 @@
-import { loadDetails } from './ShopController.js'
+import { loadDetails } from './Shop.js'
 
 function initMap(data) {
     const intialCity = { // Ontinyent

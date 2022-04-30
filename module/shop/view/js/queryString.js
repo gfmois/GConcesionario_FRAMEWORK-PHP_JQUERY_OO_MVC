@@ -1,5 +1,5 @@
 import { setLocalStorage } from './setLocalStorage.js'
-import { setFilters } from './ShopController.js'
+import { setFilters } from './Shop.js'
 
 function queryString() {
     console.log('Query');
