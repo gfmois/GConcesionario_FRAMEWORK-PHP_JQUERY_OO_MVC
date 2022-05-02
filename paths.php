@@ -67,13 +67,13 @@
     define('JS_VIEW_CART', SITE_PATH . 'module/cart/view/js/');
     define ('VIEW_PATH_CART', MODULES_PATH . 'cart/view/');
     
-    //MODEL_LOGIN
-    define('UTILS_LOGIN', MODULES_PATH . 'login/utils/');
-    define('DAO_LOGIN', MODULES_PATH . 'login/model/DAO/');
-    define('BLL_LOGIN', MODULES_PATH . 'ogin/model/BLL/');
-    define('MODEL_LOGIN', MODULES_PATH . 'login/model/model/');
-    define('JS_VIEW_LOGIN', SITE_PATH . 'modules/login/view/js/');
-    define ('VIEW_PATH_LOGIN', MODULES_PATH . 'login/view/');
+    //MODEL_AUTH
+    define('UTILS_AUTH', MODULES_PATH . 'auth/utils/');
+    define('DAO_AUTH', MODULES_PATH . 'auth/model/DAO/');
+    define('BLL_AUTH', MODULES_PATH . 'ogin/model/BLL/');
+    define('MODEL_AUTH', MODULES_PATH . 'auth/model/model/');
+    define('JS_VIEW_AUTH', SITE_PATH . 'modules/auth/view/js/');
+    define ('VIEW_PATH_AUTH', MODULES_PATH . 'auth/view/');
 
     // Friendly
     define('URL_FRIENDLY', TRUE);

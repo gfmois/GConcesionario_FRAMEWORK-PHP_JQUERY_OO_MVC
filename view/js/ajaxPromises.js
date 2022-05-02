@@ -1,3 +1,5 @@
+import { clock } from "../../module/auth/view/js/clock";
+
 const pausedPromise = (ms) => new Promise((resolve, reject) => {
     setTimeout(async() => {
         try {
@@ -6,6 +8,25 @@ const pausedPromise = (ms) => new Promise((resolve, reject) => {
             reject(error)
         }
     }, ms);
+})
+
+const ajaxPromiseWithSpinner = (method, url, dataType, vData) => new Promise((resolve, reject) => {
+    try {
+        $.ajax({
+            type: method,
+            url: url,
+            data: vData,
+            dataType: dataType,
+            beforeSend: clock(),
+            success: (data) => resolve(data),
+            error: (error) => reject(error),
+            complete: () => {
+                document.getElementById('clockWrapper').remove();
+            }
+        });
+    } catch (error) {
+        reject(error)
+    }
 })
 
 const ajaxPromise = (method, url, dataType, vData) => new Promise((resolve, reject) => {
@@ -63,6 +84,6 @@ const friendlyURL = (url) => {
     }
 
     // FIXME: La ip no se tiene que ver y no poner localhost porque sino solo funciona en el portatil.
-    // return "http://localhost/GConcesionario_FRAMEWORK_JQUERY_OO_MVC" + link;
-    return "http://192.168.1.175/GConcesionario_FRAMEWORK_JQUERY_OO_MVC" + link;
+    return "http://localhost/GConcesionario_FRAMEWORK_JQUERY_OO_MVC" + link;
+    // return "http://192.168.1.175/GConcesionario_FRAMEWORK_JQUERY_OO_MVC" + link;
 }

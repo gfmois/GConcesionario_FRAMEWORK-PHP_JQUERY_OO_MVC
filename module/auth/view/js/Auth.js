@@ -1,5 +1,5 @@
-import { validateLoginForm } from './loginController.js'
-import { validateRegisterForm } from './registerController.js'
+import { validateLoginForm } from './login.js'
+import { validateRegisterForm } from './register.js'
 
 function loadForm() {
     let topContainer = document.createElement('div')

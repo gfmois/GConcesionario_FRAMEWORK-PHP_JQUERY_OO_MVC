@@ -18,13 +18,11 @@
             return self::$_instance;
         }
 
-        public function generateMail($name, $account, $text, $theme) {
+        public function generateContactMail($name, $account, $text, $theme) {
             $mail = new PHPMailer(true);
     
             try {
-                // Server Site
                 $mail->isSMTP();
-                // $mail->SMTPDebug    = 2;
                 $mail->SMTPAuth     = true;
                 $mail->SMTPSecure   = 'tls';
                 $mail->Host         = $this->iniFile["SMTP"]["host"];
@@ -47,6 +45,41 @@
                 return [
                     "result" => [
                         "message" => "Mensaje enviado, revise el correo",
+                        "code" => 200
+                    ]
+                ];
+            } catch (Exception $e) {
+                echo "Message could not be sent. Mail error: {$mail->ErrorInfo}";
+            }
+        }
+
+        public function generateVerificationMail(String $name, String $account, String $link) {
+            $mail = new PHPMailer(true);
+    
+            try {
+                $mail->isSMTP();
+                $mail->SMTPAuth     = true;
+                $mail->SMTPSecure   = 'tls';
+                $mail->Host         = $this->iniFile["SMTP"]["host"];
+                $mail->Port         = 587;
+                $mail->Username     = $this->iniFile["SMTP"]["username"];
+                $mail->Password     = $this->iniFile["SMTP"]["password"];
+
+                // Recipient
+                $mail->setFrom("gconcesionario@no-reply.com", "Verification Link");
+                $mail->addAddress($account, $name);
+                // $mail->addReplyTo($account, $);
+                
+                // Content
+                $mail->isHTML(true);
+                $mail->Subject      = "Welcome to GConcesionario " . $name;
+                $mail->Body         = "Click in this link to verificate the account: " . $link;
+
+                $mail->send();
+
+                return [
+                    "result" => [
+                        "message" => "Revise el correo para verificar la cuenta",
                         "code" => 200
                     ]
                 ];

@@ -1,5 +1,6 @@
 import { faker } from "https://cdn.jsdelivr.net/npm/@faker-js/faker/+esm";
-import { login } from './loginController.js'
+import { clock } from "./clock.js";
+import { login } from './login.js'
 
 function validateRegisterForm() {
     let registerForm = document.getElementById('rForm')
@@ -42,7 +43,7 @@ function validateRegisterForm() {
             error.appendChild(document.createTextNode('Nombre de usuario no válido'))
         } else if (!passwordRx.test(passwordValue) || !passwordRx.test(rePasswordValue)) {
             error.appendChild(document.createTextNode('Contraseñas no válidas \n'))
-        } 
+        }
     }
 
     registerForm.childNodes.forEach((v, k, p) => {
@@ -58,9 +59,10 @@ function register() {
     formSerialized.avatar = "https://api.multiavatar.com/" + formSerialized.username + ".svg"; //NOTE -> Apikey ?apikey=7ain1ter2Mh0k9
     // formSerialized.avatar = faker.image.avatar();
 
-    ajaxPromise('POST', 'module/auth/controller/AuthController.php?op=register', 'json', formSerialized).then((response) => {
-        let loginInfo = { "username": formSerialized.username, "password": formSerialized.password }
-        login(loginInfo)
+    ajaxPromiseWithSpinner('POST', friendlyURL('?page=auth&op=register'), 'json', formSerialized).then((response) => {
+        console.log(response);
+        //     // let loginInfo = { "username": formSerialized.username, "password": formSerialized.password }
+        //     // login(loginInfo)
     })
 }
 

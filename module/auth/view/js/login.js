@@ -1,4 +1,4 @@
-import { clock } from '../view/js/clock.js'
+import { clock } from './clock.js'
 
 function validateLoginForm() {
     let loginForm = document.getElementById('lForm')
