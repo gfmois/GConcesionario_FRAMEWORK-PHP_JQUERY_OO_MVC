@@ -15,5 +15,9 @@
         public function loadRegisterUser($args) {
             return $this->bll->registerUser($args);
         }
+
+        public function loadVerification($args) {
+            return $this->bll->verificationBLL($args);
+        }
     }
 ?>

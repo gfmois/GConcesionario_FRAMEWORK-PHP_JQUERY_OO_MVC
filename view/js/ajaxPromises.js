@@ -1,5 +1,3 @@
-import { clock } from "../../module/auth/view/js/clock";
-
 const pausedPromise = (ms) => new Promise((resolve, reject) => {
     setTimeout(async() => {
         try {
@@ -17,7 +15,26 @@ const ajaxPromiseWithSpinner = (method, url, dataType, vData) => new Promise((re
             url: url,
             data: vData,
             dataType: dataType,
-            beforeSend: clock(),
+            beforeSend: () => {
+                let head = document.getElementsByTagName('HEAD')[0];
+                let link = document.createElement('link');
+                let clock = document.createElement('div');
+                let clockWrapper = document.createElement('div')
+
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = './view/css/clock.css';
+
+                clockWrapper.className = "clock-wrapper"
+                clockWrapper.id = "clockWrapper"
+
+                clock.className = "clock-loader"
+                clock.id = "clock"
+
+                head.appendChild(link);
+                clockWrapper.appendChild(clock)
+                document.body.insertBefore(clockWrapper, document.body.firstChild)
+            },
             success: (data) => resolve(data),
             error: (error) => reject(error),
             complete: () => {
@@ -27,7 +44,7 @@ const ajaxPromiseWithSpinner = (method, url, dataType, vData) => new Promise((re
     } catch (error) {
         reject(error)
     }
-})
+});
 
 const ajaxPromise = (method, url, dataType, vData) => new Promise((resolve, reject) => {
     try {

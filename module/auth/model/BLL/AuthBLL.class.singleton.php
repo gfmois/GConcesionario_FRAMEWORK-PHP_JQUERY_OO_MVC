@@ -3,12 +3,16 @@
         private $authDAO;
         private $db;
         private $mailer;
+        private $jwt;
+        private $parseIni;
         static $_instance;
 
         function __construct() {
             $this->mailer = Mailer::getInstance();
             $this->authDAO = AuthDAO::getInstance();
             $this->db = Connection::getInstance();
+            $this->jwt = JWT::getInstance();
+            $this->parseIni = parse_ini_file('model/Config.ini', true);
         }
 
         public static function getInstance() {
@@ -17,11 +21,16 @@
         }
 
         public function registerUser($args) {
-            $return = $this->authDAO->account_register($this->db, $args);
+            $return = json_decode($this->authDAO->account_register($this->db, $args));
 
-            if (json_decode($return)->result->code == 23) {
-                $this->mailer->generateVerificationMail($args["username"], $args["email"], "https://www.google.com");
-                return $return;
+            if ($return->result->code == 23) {
+                $this->mailer->generateVerificationMail($args["username"], $args["email"], "http://localhost/GConcesionario_FRAMEWORK_JQUERY_OO_MVC/auth/verification/" . $return->result->token);
+                return [
+                    "result" => [
+                        "message" => $return->result->message,
+                        "code" => $return->result->code
+                    ]
+                ];
             }
 
             return [
@@ -30,6 +39,10 @@
                     "code" => 404
                 ]
             ];
+        }
+
+        public function verificationBLL($args) {
+            return $this->authDAO->validateUser($this->db, $args);
         }
     }
 ?>

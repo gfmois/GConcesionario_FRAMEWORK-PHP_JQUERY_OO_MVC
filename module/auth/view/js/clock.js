@@ -1,4 +1,4 @@
-function clock() {
+export function clock() {
     let head = document.getElementsByTagName('HEAD')[0];
     let link = document.createElement('link');
     let clock = document.createElement('div');
@@ -18,5 +18,3 @@ function clock() {
     clockWrapper.appendChild(clock)
     document.body.insertBefore(clockWrapper, document.body.firstChild)
 }
-
-export { clock }

@@ -17,7 +17,8 @@ function checkContactInfo() {
     }
 
     if (allComplete != false) {
-        ajaxPromise('POST', friendlyURL('?page=contact&op=sendContactMessage'), 'json', contactInfo).then((res) => {
+        console.log(contactInfo);
+        ajaxPromiseWithSpinner('POST', friendlyURL('?page=contact&op=sendContactMessage'), 'json', contactInfo).then((res) => {
             Swal.fire({
                 title: 'Mensaje Enviado',
                 text: res.result.message,
@@ -33,7 +34,7 @@ function checkContactInfo() {
     }
 }
 
-$(document).ready(function () {
+$(document).ready(function() {
     $('.submit-btn').on('click', () => {
         checkContactInfo();
     })

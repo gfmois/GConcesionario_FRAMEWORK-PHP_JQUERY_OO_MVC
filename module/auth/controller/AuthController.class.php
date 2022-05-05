@@ -7,5 +7,9 @@
         function register() {
             echo json_encode(common::loadModel('AuthModel', 'loadRegisterUser', $_POST));
         }
+
+        function verification() {
+            echo json_encode(common::loadModel('AuthModel', 'loadVerification', $_GET['param']));
+        }
     }
 ?>
