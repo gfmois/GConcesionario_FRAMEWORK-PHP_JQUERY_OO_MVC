@@ -28,30 +28,47 @@ function validateLoginForm() {
 
 }
 
-function login(userInfo = $('#lForm').serializeObject()) {
+async function login(userInfo = $('#lForm').serializeObject()) {
+    const verificated = await isVerificated(userInfo);
 
-    ajaxPromise('POST', 'module/auth/controller/AuthController.php?op=login', 'json', userInfo).then((response) => {
-        console.log(response);
-        if (response.message) {
-            let logForm = document.getElementById('lForm')
-            let errorMessage = document.getElementById('error')
 
-            errorMessage.appendChild(document.createTextNode(response.message.commentary))
+    if (verificated) {
+        ajaxPromise('POST', friendlyURL('?page=auth&op=login'), 'json', userInfo).then((response) => {
+            if (response.result) {
+                let logForm = document.getElementById('lForm')
+                let errorMessage = document.getElementById('error')
 
-            logForm.insertBefore(errorMessage, document.getElementById('errorBrLogin'))
-        } else {
-            localStorage.setItem('token', response)
-            clock()
-            pausedPromise(700).then(() => {
-                let search = window.location.search
-                let params = new URLSearchParams(search)
-                params.set('module', "home")
-                window.history.replaceState({}, '', `${window.location.pathname}?${params}`)
-                window.location.reload()
-            })
+                errorMessage.appendChild(document.createTextNode(response.result.message))
+
+                logForm.insertBefore(errorMessage, document.getElementById('errorBrLogin'))
+            } else {
+                localStorage.setItem('token', response)
+                clock()
+                pausedPromise(1000).then(() => {
+                    window.location.href = friendlyURL('?page=home');
+                })
+            }
+        })
+    } else {
+        let logForm = document.getElementById('lForm')
+        let errorMessage = document.getElementById('error')
+
+        errorMessage.appendChild(document.createTextNode("Porfavor revise su correo"))
+
+        logForm.insertBefore(errorMessage, document.getElementById('errorBrLogin'))
+    }
+}
+
+
+async function isVerificated(userInfo) {
+    let isValid = false;
+    await ajaxPromise('POST', friendlyURL('?page=auth&op=isVerificated'), 'json', userInfo).then((response) => {
+        if (response.result.code == 1) {
+            isValid = true;
         }
+    });
 
-    })
+    return isValid;
 }
 
 export { validateLoginForm, login }

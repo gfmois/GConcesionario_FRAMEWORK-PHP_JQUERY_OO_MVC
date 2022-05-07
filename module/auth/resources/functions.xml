@@ -9,7 +9,23 @@
         <uri>register</uri>
     </function>
     <function>
+        <name>login</name>
+        <uri>login</uri>
+    </function>
+    <function>
         <name>verification</name>
         <uri>verification</uri>
+    </function>
+    <function>
+        <name>checkToken</name>
+        <uri>checkToken</uri>
+    </function>
+    <function>
+        <name>logout</name>
+        <uri>logout</uri>
+    </function>
+    <function>
+        <name>isVerificated</name>
+        <uri>isVerificated</uri>
     </function>
 </functions>

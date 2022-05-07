@@ -60,9 +60,8 @@ function register() {
     // formSerialized.avatar = faker.image.avatar();
 
     ajaxPromiseWithSpinner('POST', friendlyURL('?page=auth&op=register'), 'json', formSerialized).then((response) => {
-        console.log(response);
-        //     // let loginInfo = { "username": formSerialized.username, "password": formSerialized.password }
-        //     // login(loginInfo)
+        let loginInfo = { "username": formSerialized.username, "password": formSerialized.password }
+        login(loginInfo)
     })
 }
 

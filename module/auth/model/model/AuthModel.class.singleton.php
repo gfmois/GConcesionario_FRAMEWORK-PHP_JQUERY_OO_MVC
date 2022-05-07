@@ -13,11 +13,27 @@
         }
 
         public function loadRegisterUser($args) {
-            return $this->bll->registerUser($args);
+            return $this->bll->registerUserBLL($args);
+        }
+
+        public function loadLoginUser($args) {
+            return $this->bll->loginUserBLL($args);
         }
 
         public function loadVerification($args) {
             return $this->bll->verificationBLL($args);
+        }
+
+        public function loadCheckToken($token) {
+            return $this->bll->checkTokenBLL($token);
+        }
+
+        public function loadLogout($args) {
+            return $this->bll->logoutBLL($args);
+        }
+
+        public function loadIsVerificated($args) {
+            return $this->bll->checkIfVerificated($args);
         }
     }
 ?>

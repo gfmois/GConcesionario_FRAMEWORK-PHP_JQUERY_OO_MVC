@@ -1,8 +1,11 @@
 <?php
     class AuthDAO {
+        private $token;
         static $_instance;
 
-        private function __construct() {}
+        private function __construct() {
+            $this->token = JWT::getInstance();
+        }
 
         public static function getInstance() {
             if (!(self::$_instance instanceof self)) self::$_instance = new self();
@@ -52,6 +55,11 @@
             }
         } 
 
+        public function account_login(Connection $db, $userInfo) {
+            $sql = "SELECT * FROM users WHERE username LIKE BINARY " . "'" . $userInfo["username"] . "';";
+            return $db->selectObject($sql);
+        }
+
         public function validateUser(Connection $db, $emailToken) {
             $sql = "SELECT verificated FROM users WHERE token_email LIKE " . "'" . $emailToken . "'";
             
@@ -85,6 +93,22 @@
                 ];
                 
             }
+        }
+
+        public function findByUsername(Connection $db, $name) {
+            $sql = "SELECT username, email, avatar, type FROM users WHERE username LIKE " . "'" . $name . "'";
+            $res = $db->selectObject($sql);
+            return get_object_vars($res);
+        }
+
+        public function userVerificated(Connection $db, $args) {
+            $sql = "SELECT verificated FROM users WHERE username LIKE " . "'" . $args . "'";
+            return $db->selectObject($sql);
+        }
+
+        public function getPassword(Connection $db, $args) {
+            $sql = "SELECT password FROM users WHERE username LIKE " . "'" . $args . "'";
+            return $db->list($db->select($sql))[0]["password"];
         }
     }
 ?>

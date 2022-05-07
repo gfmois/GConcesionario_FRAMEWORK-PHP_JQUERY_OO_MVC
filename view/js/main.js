@@ -3,8 +3,7 @@ import { Timer } from '../../module/auth/view/js/timer.js'
 
 function loadMenu() {
     if (localStorage.getItem('token')) {
-        // let token = { "token": localStorage.getItem('token').replace(/['"]+/g, '') }
-        ajaxPromiseW_Token("POST", 'module/auth/controller/AuthController.php?op=checkToken', "json").then((response) => {
+        ajaxPromiseW_Token("POST", friendlyURL('?page=auth&op=checkToken'), "json").then((response) => {
             if (response) {
                 let dropdown = document.createElement('div')
                 let dropbutton = document.createElement('btn')
@@ -42,29 +41,24 @@ function loadMenu() {
 
                 document.getElementById('user').appendChild(menuWrapper)
 
-                console.log(response);
-                console.log(document.getElementById('user'));
-
                 $('.logout').on('click', function() {
                     logout()
                 })
-            } 
+            }
         })
     }
 }
 
 function logout() {
-    ajaxPromiseW_Token('POST', 'module/auth/controller/AuthController.php?op=logout', 'json').then((response) => {
-        if (response) {
+    ajaxPromiseW_Token('POST', friendlyURL('?page=auth&op=logout'), 'json').then((response) => {
+        if (response.result.code != 404) {
             clock()
             setTimeout(() => {
                 localStorage.removeItem('token')
-                let search = window.location.search
-                let params = new URLSearchParams(search)
-                params.set('module', "auth")
-                window.history.replaceState({}, '', `${window.location.pathname}?${params}`)
-                window.location.reload()
+                window.location.href = friendlyURL('?page=auth')
             }, 400)
+        } else {
+            console.log("Error Token")
         }
     })
 }

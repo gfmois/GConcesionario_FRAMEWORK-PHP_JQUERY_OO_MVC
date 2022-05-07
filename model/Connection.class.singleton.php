@@ -41,6 +41,11 @@
             return $this->stmt;
         }
 
+        public function selectObject($sql) {
+            $this->stmt = $this->link->query($sql)->fetch_object();
+            return $this->stmt;
+        }
+
         public function list($stmt) {
             $this->array = array();
             while ($row = $stmt->fetch_array(MYSQLI_ASSOC)) {
