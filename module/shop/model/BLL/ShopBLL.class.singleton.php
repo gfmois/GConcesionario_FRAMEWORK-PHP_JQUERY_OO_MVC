@@ -33,5 +33,13 @@
         public function getResultAddCount(String $carVIN) {
             return $this->shopDAO->addCountToCar($this->db, $carVIN);
         }
+
+        public function getLikesBLL($token) {
+            return $this->shopDAO->getDataLikes($this->db, $token);
+        }
+
+        public function getLikeStatusBLL($token, $idCar) {
+            return $this->shopDAO->getDataStatusLike($this->db, $token, $idCar);
+        }
     }
 ?>

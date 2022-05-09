@@ -31,6 +31,14 @@
         public function loadAddCount(String $carVIN) {
             return $this->bll->getResultAddCount($carVIN);
         }
+
+        public function loadLikes($token) {
+            return $this->bll->getLikesBLL($token);
+        }
+
+        public function loadLikeStatus($args) {
+            return $this->bll->getLikeStatusBLL($args[0], $args[1]);
+        }
     }
 
 ?>

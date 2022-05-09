@@ -3,15 +3,15 @@ import { queryString } from './queryString.js'
 import { loadFiltersDiv, setFilters } from './set_load_filters.js'
 
 function loadCars(carsReceived = [], op = 0) {
-    
+
     let urlParams = window.location.search
     let params = new URLSearchParams(urlParams)
-    
+
     if (!params.get('pagination') && params.get('module') == "shop") {
         params.set('pagination', 1)
         window.history.replaceState({}, '', `${window.location.pathname}?${decodeURIComponent(params)}`)
     }
-    
+
     let pagination = params.get('pagination') != null ? params.get('pagination') : 1;
     let url = friendlyURL("?page=shop&op=allCars")
 
@@ -68,6 +68,7 @@ function loadCars(carsReceived = [], op = 0) {
             pausedPromise(350).then(() => {
                 setTimeout(() => document.getElementById('remplace').remove(), 0) // Remove Div 
                 let firstChild = article.firstChild
+                img.className = "imgCar"
                 img.src = item.carUrl == undefined || null ? "view/images/loading.gif" : item.carUrl
                 img.style.height = 119
                 img.style.width = 198
@@ -100,23 +101,7 @@ function loadCars(carsReceived = [], op = 0) {
             article.appendChild(info)
             itemsDiv.appendChild(article)
 
-            $(button).mouseenter(() => {
-                article.style.pointerEvents = "none";
-            })
-
-            // if (localStorage.getItem('token')) {
-            //     $(button).on('click', () => {
-            //         ajaxPromiseW_Token('POST', "module/shop/controller/ShopController.php?op=likeStatus", 'json', { "idCar": this.id }).then((res) => {
-            //             if (res.message.cod == 278) {
-            //                 $(button).addClass('liked')
-            //             } else if (res.message.cod == 346) {
-            //                 $(button).removeClass('liked')
-            //             }
-            //         })
-            //     })
-            // }
-
-            $(article).on('click', function() {
+            $('.imgCar').on('click', function() {
                 let id = $(this).attr('id');
                 ajaxPromise('POST', friendlyURL('?page=shop&op=addCount'), 'json', { vin: id })
                     .then((response) => {
@@ -132,18 +117,31 @@ function loadCars(carsReceived = [], op = 0) {
 
         });
 
+        if (localStorage.getItem('token')) {
+            pausedPromise(350).then(() => {
+                $('.likeBtn').on('click', (e) => {
+                    ajaxPromiseW_Token('POST', friendlyURL('?page=shop&op=likeStatus'), 'json', { idCar: $(e.target).parent().parent().attr('id') }).then((res) => {
+                        if (res == true) {
+                            $(e.target).toggleClass('liked')
+                        }
+                        loadLikes();
+                    })
+                })
+            })
+        }
+
         document.getElementById('shopList').appendChild(filtersDiv)
         document.getElementById('shopList').appendChild(itemsDiv)
 
         initMap(carsReceived.length == 0 ? json[0] : carsReceived)
-        // pausedPromise(350).then(() => loadLikes())
+        pausedPromise(350).then(() => loadLikes())
     })
 }
 
 function loadDetails(carID) {
     let url = friendlyURL('?page=shop&op=fromCar')
 
-    ajaxPromise('POST', url, 'json', {id: carID}).then((json) => {
+    ajaxPromise('POST', url, 'json', { id: carID }).then((json) => {
         console.log(json);
         let main = document.createElement('main')
         let thumbCarousel = document.createElement('div')
@@ -159,7 +157,7 @@ function loadDetails(carID) {
         leftColumn.className = 'left-column'
         gallery.id = "gallery"
 
-        
+
         $.each(json[1], function(index, imgSrc) {
             let a = document.createElement('a')
             let img = document.createElement('img')
@@ -372,15 +370,15 @@ function loadDetails(carID) {
     })
 }
 
-// function loadLikes() {
-//     if (localStorage.getItem('token')) {
-//         ajaxPromiseW_Token('GET', 'module/shop/controller/ShopController.php?op=likes', 'json').then((likes) => {
-//             $.each(likes, function(index, item) {
-//                 $('#' + item.vin_number).find('button').addClass('liked');
-//             });
-//         })
-//     }
-// }
+function loadLikes() {
+    if (localStorage.getItem('token')) {
+        ajaxPromiseW_Token('GET', friendlyURL('?page=shop&op=likes'), 'json').then((likes) => {
+            $.each(likes, function(index, item) {
+                $('#' + item.vin_number).find('button').addClass('liked');
+            });
+        })
+    }
+}
 
 $(document).ready(function() {
     loadCars();

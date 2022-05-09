@@ -101,6 +101,6 @@ const friendlyURL = (url) => {
     }
 
     // FIXME: La ip no se tiene que ver y no poner localhost porque sino solo funciona en el portatil.
-    // return "http://localhost/GConcesionario_FRAMEWORK_JQUERY_OO_MVC" + link;
-    return "http://192.168.1.175/GConcesionario_FRAMEWORK_JQUERY_OO_MVC" + link;
+    return "http://localhost/GConcesionario_FRAMEWORK_JQUERY_OO_MVC" + link;
+    // return "http://192.168.1.175/GConcesionario_FRAMEWORK_JQUERY_OO_MVC" + link;
 }

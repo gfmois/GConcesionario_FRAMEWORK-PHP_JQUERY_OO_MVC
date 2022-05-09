@@ -31,6 +31,8 @@
                         "code" => $return->result->code
                     ]
                 ];
+            } else if ($return->result->code == 4) {
+                return $return;
             }
 
             return [
@@ -68,7 +70,7 @@
 
             return [
                 "result" => [
-                    "message" => "Uusario no Existe",
+                    "message" => "Usario no Existe",
                     "code" => 245 
                 ]
             ];

@@ -1,8 +1,13 @@
 <?php 
     class ShopDAO {
+        private $jwt;
+        private $iniFile;
         static $_instance;
 
-        private function __construct() {}
+        private function __construct() {
+            $this->jwt = JWT::getInstance();
+            $this->iniFile = parse_ini_file('model/Config.ini');
+        }
 
         public static function getInstance() {
             if (!(self::$_instance instanceof self)) self::$_instance = new self();
@@ -157,8 +162,27 @@
             if ($stmt) return "Success"; else return "Error";
         }
 
-        // public function getDataFromLikes(Connection $db, String $token) {
+        public function getDataLikes(Connection $db, $token) {
+            $decodedUser = json_decode(JWT_Process::decode($token))->user;
+            $sql = "SELECT vin_number FROM cars WHERE id IN (SELECT idCar FROM likes WHERE username LIKE " . "'" . $decodedUser . "'" . ")";
+            return $db->list($db->select($sql));
+        }
+
+        public function getDataStatusLike(Connection $db, $token, $idCar) {
+            $decodedUser = json_decode(JWT_Process::decode($token))->user;
+            $id = "SELECT id FROM cars WHERE vin_number = " . "'" . $idCar . "'";
+            $sql = "SELECT * FROM likes WHERE username LIKE " . "'" . $decodedUser . "' AND idCar = (" . $id . ")";
             
-        // }
+            $stmt = $db->select($sql);
+            if (mysqli_num_rows($stmt) > 0) {
+                $query = "DELETE FROM likes WHERE idCar = (" . $id . ") AND username LIKE " . "'" . $decodedUser . "'"; 
+            } else  {
+                $query = "INSERT INTO likes VALUES (" . "'" . $decodedUser . "', (" . $id . "))";
+            }
+
+            $rStmt = $db->select($query);
+
+            return $rStmt;
+        }
     }    
 ?>

@@ -26,8 +26,7 @@ function checkContactInfo() {
                 confirmButtonText: 'Aceptar',
             }).then((op) => {
                 if (op.isConfirmed) {
-                    window.history.replaceState({}, '', `${window.location.pathname.replace('contact', 'home')}`)
-                    window.location.reload()
+                    window.location.href = ajaxPromise('?page=home')
                 }
             })
         })

@@ -60,8 +60,22 @@ function register() {
     // formSerialized.avatar = faker.image.avatar();
 
     ajaxPromiseWithSpinner('POST', friendlyURL('?page=auth&op=register'), 'json', formSerialized).then((response) => {
-        let loginInfo = { "username": formSerialized.username, "password": formSerialized.password }
-        login(loginInfo)
+        console.log(response);
+        if (response.result.code == 23) {
+            Swal.fire({
+                title: 'Todo fue bien',
+                text: response.result.message + ", revise su correo.",
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+            })
+        } else {
+            Swal.fire({
+                title: 'Algo fue mal...',
+                text: response.result.message,
+                icon: 'error',
+                confirmButtonText: 'Aceptar',
+            })
+        }
     })
 }
 

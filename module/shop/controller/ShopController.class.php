@@ -24,4 +24,12 @@
         function addCount() {
             echo json_encode(common::loadModel('ShopModel', 'loadAddCount'), $_POST['vin']);
         }
+
+        function likes() {
+            echo json_encode(common::loadModel('ShopModel', 'loadLikes', apache_request_headers()["token"]));
+        }
+
+        function likeStatus() {
+            echo json_encode(common::loadModel('ShopModel', 'loadLikeStatus', [apache_request_headers()['token'], $_POST["idCar"]]));
+        }
     }

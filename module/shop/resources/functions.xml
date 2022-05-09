@@ -24,4 +24,12 @@
         <name>addCount</name>
         <uri>addCount</uri>
     </function>
+    <function>
+        <name>likes</name>
+        <uri>likes</uri>
+    </function>
+    <function>
+        <name>likeStatus</name>
+        <uri>likeStatus</uri>
+    </function>
 </functions>
