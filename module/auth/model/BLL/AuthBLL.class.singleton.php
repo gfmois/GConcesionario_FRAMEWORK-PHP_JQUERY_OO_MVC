@@ -24,7 +24,7 @@
             $return = json_decode($this->authDAO->account_register($this->db, $args));
 
             if ($return->result->code == 23) {
-                $this->mailer->generateVerificationMail($args["username"], $args["email"], "http://localhost/GConcesionario_FRAMEWORK_JQUERY_OO_MVC/auth/verification/" . $return->result->token);
+                if ($return->result->social == false) $this->mailer->generateVerificationMail($args["username"], $args["email"], "http://localhost/GConcesionario_FRAMEWORK_JQUERY_OO_MVC/auth/verification/" . $return->result->token);
                 return [
                     "result" => [
                         "message" => $return->result->message,
@@ -47,7 +47,13 @@
             $res = $this->authDAO->account_login($this->db, $args);
             $stmt = $res != null ? get_object_vars($res) : null;
             
-            if ($stmt != null && password_verify($args["password"], $stmt["password"])) {
+            if ($stmt["social"]) {
+                $social = true;
+            } else {
+                $social = password_verify($args["password"], $stmt["password"]);
+            }
+
+            if ($stmt != null && $social) {
                 try {
                     $header = '{"typ": ' . '"' . $this->parseIni["Header"]["typ"] . '", "alg": ' . '"' . $this->parseIni["Header"]["alg"] . '"}';
                     $key = $this->parseIni['Secret']['key'];

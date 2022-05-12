@@ -1,6 +1,8 @@
 import { validateLoginForm } from './login.js'
 import { validateRegisterForm } from './register.js'
 
+let userProfile;
+
 function loadForm() {
     let topContainer = document.createElement('div')
 
@@ -87,12 +89,13 @@ function loadForm() {
     let errorLogbr = document.createElement('br')
 
     let socialSignInIcons = ["fab fa-brands fa-github", "fab fa-google-plus-g"]
+    let classNames = ["githubCl", "gmailCl"]
 
     socialSignInIcons.forEach((value, index) => {
         let socialA = document.createElement('a')
         let socialIcon = document.createElement('i')
 
-        socialA.className = "social"
+        socialA.className = "social " + classNames[index]
         socialIcon.className = socialSignInIcons[index]
         socialA.href = "#"
         socialA.style.textDecoration = "none"
@@ -223,7 +226,105 @@ function loadForm() {
         validateRegisterForm()
     })
 }
+let webAuth = new auth0.WebAuth({
+    domain: 'dev--h21qj3n.us.auth0.com',
+    clientID: 'dPVXErytsisi3Iw5xV6pS4NyRFIVU7GA',
+    redirectUri: 'http://localhost/GConcesionario_FRAMEWORK_JQUERY_OO_MVC/auth',
+    responseType: 'token id_token',
+    scope: 'openid profile email',
+    leeway: 60
+})
 
-$(document).ready(function() {
+function setSessionExpiration(authResult) {
+    let expires_at = JSON.stringify(
+        authResult.expiresIn * 1000 + new Date().getTime()
+    );
+
+    localStorage.setItem('access_token', authResult.accessToken);
+    localStorage.setItem('id_token', authResult.idToken);
+    localStorage.setItem('expires_at', expires_at);
+}
+
+function logout() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('expires_at');
+
+    webAuth.logout({
+        client_id: 'dPVXErytsisi3Iw5xV6pS4NyRFIVU7GA'
+    });
+}
+
+function isAuthenticated() {
+    let expires_at = JSON.parse(localStorage.getItem('expires_at'));
+    return new Date().getTime() < expires_at;
+}
+
+function getProfile() {
+    if (!userProfile) {
+        let accessToken = localStorage.getItem('access_token');
+        if (!accessToken) {
+            console.log("No access token");
+        }
+
+        webAuth.client.userInfo(accessToken, (err, profile) => {
+            if (profile) {
+                console.log(profile)
+                userProfile = profile;
+            }
+        })
+    }
+}
+
+function handleAuthentication() {
+    webAuth.parseHash((err, authResult) => {
+        if (authResult && authResult.accessToken && authResult.idToken) {
+            window.location.hash = '';
+            setSessionExpiration(authResult)
+
+            let userInfo = {
+                email: authResult.idTokenPayload.email,
+                verified: authResult.idTokenPayload.email_verified,
+                username: authResult.idTokenPayload.nickname,
+                avatar: authResult.idTokenPayload.picture,
+                uuid: authResult.idTokenPayload.sub.split('|')[1],
+                password: null
+            }
+
+            ajaxPromiseWithSpinner('POST', friendlyURL('?page=auth&op=register'), 'json', userInfo).then((res) => {
+                console.log(res);
+                if (res.result.code == 23) {
+                    ajaxPromiseWithSpinner('POST', friendlyURL('?page=auth&op=login'), 'json', userInfo).then((response) => {
+                        localStorage.setItem('token', response)
+                        window.location.href = friendlyURL('?page=home')
+                    })
+                }
+            })
+
+            // console.log(authResult);
+        } else if (err) {
+            alert(err)
+        }
+    })
+}
+
+$(document).ready(async() => {
+    pausedPromise(350).then(() => {
+        $('.gmailCl').on('click', (e) => {
+            webAuth.authorize({
+                connection: 'google-oauth2'
+            });
+        });
+        $('.githubCl').on('click', (e) => {
+            webAuth.authorize({
+                connection: 'github'
+            });
+        });
+
+    })
+
     loadForm()
+    handleAuthentication()
+
+
 });

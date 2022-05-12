@@ -28,4 +28,8 @@
         <name>isVerificated</name>
         <uri>isVerificated</uri>
     </function>
+    <function>
+        <name>socialLogin</name>
+        <uri>socialLogin</uri>
+    </function>
 </functions>

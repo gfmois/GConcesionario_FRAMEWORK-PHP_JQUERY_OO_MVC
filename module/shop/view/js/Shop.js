@@ -101,7 +101,7 @@ function loadCars(carsReceived = [], op = 0) {
             article.appendChild(info)
             itemsDiv.appendChild(article)
 
-            $('.imgCar').on('click', function() {
+            $(article).on('click', function() {
                 let id = $(this).attr('id');
                 ajaxPromise('POST', friendlyURL('?page=shop&op=addCount'), 'json', { vin: id })
                     .then((response) => {

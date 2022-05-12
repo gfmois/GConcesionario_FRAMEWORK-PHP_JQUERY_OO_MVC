@@ -8,7 +8,7 @@ function isOdd(n) {
     }
 }
 
-function loadCarousel() {   
+function loadCarousel() {
     console.log(friendlyURL('?page=home&op=carousel'));
 
     fetch(friendlyURL('?page=home&op=carousel')).then(response => response.json()).then(data => {

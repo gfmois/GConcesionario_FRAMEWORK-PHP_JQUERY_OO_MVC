@@ -18,7 +18,7 @@
                     WHERE username 
                     LIKE " . "'" . $userInfo['username'] . "' 
                     OR email LIKE "  . "'" . $userInfo["email"] . "';";
-            
+
             $stmt = $db->select($sql);
 
             if (mysqli_num_rows($stmt)) {
@@ -29,19 +29,35 @@
                     ]
                 ]);
             } else {
-                $tokenEmail = common::generate_token_secure(20);
-                $query = "INSERT INTO users(uuid, verificated, username, password, email, token_email, avatar) 
-                VALUES (" . "'" . common::generate_token_secure(20) . "', " . 0 . ", '" . $userInfo['username'] . "', 
-                '" . password_hash($userInfo['password'], PASSWORD_DEFAULT, ["cost" => 12]) . 
-                "', " . "'" . $userInfo['email'] . "', '" . $tokenEmail . "', '" . $userInfo['avatar'] . "')";
+                $social = false;
+
+                if ($userInfo["uuid"]) {
+                    $tokenUuid = $userInfo["uuid"];
+                    $social = true;
+                } else $tokenUuid = common::generate_token_secure(21);
+
+                if ($userInfo["password"] == null) $passwd = null;
+                else $passwd = password_hash($userInfo['password'], PASSWORD_DEFAULT, ["cost" => 12]);
+
+                if ($userInfo["verified"] == true) $verified = 1;
+                else $verified = 0; 
+                
+                $tokenEmail = common::generate_token_secure(21);
+
+                $query = "INSERT INTO users(uuid, verificated, username, password, email, token_email, avatar, social) 
+                VALUES (" . "'" . $tokenUuid . "', " . $verified . ", '" . $userInfo['username'] . "', 
+                '" . $passwd . 
+                "', " . "'" . $userInfo['email'] . "', '" . $tokenEmail . "', '" . $userInfo['avatar'] . "', " . $social . ")";
 
                 $stmt_register = $db->select($query);
                 if ($stmt_register) {
+                    if ($userInfo["uuid"]) $social = true; else $social = false;
                     return json_encode([
                         "result" => [
                             "message" => "Usuario creado correctamente",
                             "code" => 23,
-                            "token" => $tokenEmail
+                            "token" => $tokenEmail,
+                            "social" => $social
                         ]
                     ]);
                 } else {
@@ -57,7 +73,9 @@
 
         public function account_login(Connection $db, $userInfo) {
             $sql = "SELECT * FROM users WHERE username LIKE BINARY " . "'" . $userInfo["username"] . "';";
-            return $db->selectObject($sql);
+            $res = $db->selectObject($sql);
+            $res->social = true;
+            return $res;
         }
 
         public function validateUser(Connection $db, $emailToken) {
