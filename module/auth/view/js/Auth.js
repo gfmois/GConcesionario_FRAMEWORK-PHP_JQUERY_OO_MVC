@@ -4,6 +4,7 @@ import { validateRegisterForm } from './register.js'
 let userProfile;
 
 function loadForm() {
+    let classNames = ["githubCl", "gmailCl"]
     let topContainer = document.createElement('div')
 
     topContainer.className = "authContainer"
@@ -27,7 +28,7 @@ function loadForm() {
         let socialA = document.createElement('a')
         let socialIcon = document.createElement('i')
 
-        socialA.className = "social"
+        socialA.className = "social " + classNames[index]
         socialIcon.className = registerWithIcons[index]
         socialA.href = "#"
         socialA.style.textDecoration = "none"
@@ -89,7 +90,6 @@ function loadForm() {
     let errorLogbr = document.createElement('br')
 
     let socialSignInIcons = ["fab fa-brands fa-github", "fab fa-google-plus-g"]
-    let classNames = ["githubCl", "gmailCl"]
 
     socialSignInIcons.forEach((value, index) => {
         let socialA = document.createElement('a')
@@ -229,7 +229,8 @@ function loadForm() {
 let webAuth = new auth0.WebAuth({
     domain: 'dev--h21qj3n.us.auth0.com',
     clientID: 'dPVXErytsisi3Iw5xV6pS4NyRFIVU7GA',
-    redirectUri: 'http://localhost/GConcesionario_FRAMEWORK_JQUERY_OO_MVC/auth',
+    // redirectUri: 'http://localhost/GConcesionario_FRAMEWORK_JQUERY_OO_MVC/auth',
+    redirectUri: 'http://192.168.1.175/GConcesionario_FRAMEWORK_JQUERY_OO_MVC/auth',
     responseType: 'token id_token',
     scope: 'openid profile email',
     leeway: 60
@@ -284,7 +285,7 @@ function handleAuthentication() {
 
             let userInfo = {
                 email: authResult.idTokenPayload.email,
-                verified: authResult.idTokenPayload.email_verified,
+                verified: authResult.idTokenPayload.email_verified || true,
                 username: authResult.idTokenPayload.nickname,
                 avatar: authResult.idTokenPayload.picture,
                 uuid: authResult.idTokenPayload.sub.split('|')[1],
@@ -292,8 +293,7 @@ function handleAuthentication() {
             }
 
             ajaxPromiseWithSpinner('POST', friendlyURL('?page=auth&op=register'), 'json', userInfo).then((res) => {
-                console.log(res);
-                if (res.result.code == 23) {
+                if (res.result.code == 4 || res.result.code == 23) {
                     ajaxPromiseWithSpinner('POST', friendlyURL('?page=auth&op=login'), 'json', userInfo).then((response) => {
                         localStorage.setItem('token', response)
                         window.location.href = friendlyURL('?page=home')
@@ -301,9 +301,8 @@ function handleAuthentication() {
                 }
             })
 
-            // console.log(authResult);
         } else if (err) {
-            alert(err)
+            console.log(err)
         }
     })
 }

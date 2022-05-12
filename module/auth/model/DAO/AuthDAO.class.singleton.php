@@ -19,8 +19,9 @@
                     LIKE " . "'" . $userInfo['username'] . "' 
                     OR email LIKE "  . "'" . $userInfo["email"] . "';";
 
+                    
             $stmt = $db->select($sql);
-
+            
             if (mysqli_num_rows($stmt)) {
                 return json_encode([
                     "result" => [
@@ -31,15 +32,15 @@
             } else {
                 $social = false;
 
-                if ($userInfo["uuid"]) {
+                if (array_key_exists("uuid", $userInfo)) {
                     $tokenUuid = $userInfo["uuid"];
                     $social = true;
                 } else $tokenUuid = common::generate_token_secure(21);
 
-                if ($userInfo["password"] == null) $passwd = null;
+                if (array_key_exists("password", $userInfo) && $userInfo["password"] == null) $passwd = null;
                 else $passwd = password_hash($userInfo['password'], PASSWORD_DEFAULT, ["cost" => 12]);
 
-                if ($userInfo["verified"] == true) $verified = 1;
+                if (array_key_exists("verified", $userInfo) && $userInfo["verified"] == true) $verified = 1;
                 else $verified = 0; 
                 
                 $tokenEmail = common::generate_token_secure(21);
@@ -74,7 +75,10 @@
         public function account_login(Connection $db, $userInfo) {
             $sql = "SELECT * FROM users WHERE username LIKE BINARY " . "'" . $userInfo["username"] . "';";
             $res = $db->selectObject($sql);
-            $res->social = true;
+
+            if (is_object($res)) $res->social = true;
+            else if (is_array($res)) $res["social"] = true;  
+
             return $res;
         }
 

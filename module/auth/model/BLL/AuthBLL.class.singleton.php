@@ -45,9 +45,16 @@
 
         public function loginUserBLL($args) {
             $res = $this->authDAO->account_login($this->db, $args);
-            $stmt = $res != null ? get_object_vars($res) : null;
+            $stmt = $res != null ? get_object_vars($res) : [];
+
+            if (empty($stmt)) return [
+                "result" => [
+                    "message" => "Usario no Existe",
+                    "code" => 245 
+                ]
+            ];
             
-            if ($stmt["social"]) {
+            if (array_key_exists("social", $stmt) == true) {
                 $social = true;
             } else {
                 $social = password_verify($args["password"], $stmt["password"]);
