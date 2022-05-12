@@ -1,6 +1,6 @@
 # GConcesionario_FRAMEWORK-PHP_JQUERY_OO_MVC
 
-GConcesionario es un proyecto de la segunda evaluación de 1º de DAW, se trata de una web cuyo uso sería el de la venta de vehículos de segunda mano, pero esta vez gastando un framework de PHP.
+GConcesionario es un proyecto de la tercera evaluación de 1º de DAW, se trata de una web cuyo uso sería el de la venta de vehículos de segunda mano, pero esta vez gastando un framework de PHP.
 
 Las funciones que se pueden hacer son: 
 - Buscar vehículos
