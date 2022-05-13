@@ -53,15 +53,12 @@ function loadCarousel() {
         })
 
         $('.m-card').on('click', function(e) {
-            console.log($(e.target).parent()[0].id);
             let filter = {
                 id_brand: [$(e.target).parent()[0].id]
             }
 
             localStorage.setItem('filters', JSON.stringify(filter));
-            setFilters();
-
-            window.location.href = window.location.href.replace('home', 'shop');
+            window.location.href = friendlyURL('?page=shop') + '?pagination=1&id_brand=' + filter.id_brand[0]
         })
     })
 }
@@ -108,16 +105,13 @@ function loadCategories() {
                 document.getElementById('ppost').appendChild(post)
             });
 
-            $('.post').on('click', function() {
-                // console.log($(this).attr('id'));
-                const queryString = window.location.search;
-                const params = new URLSearchParams(queryString)
+            $('.post').on('click', function(e) {
+                let filter = {
+                    id_cat: [$(e.target).parent().parent()[0].id]
+                }
 
-                params.set('module', 'shop')
-                params.append('id_cat', $(this).attr('id'))
-
-                window.history.replaceState({}, '', `${window.location.pathname}?${params}`)
-                window.location.reload()
+                localStorage.setItem('filters', JSON.stringify(filter));
+                window.location.href = friendlyURL('?page=shop') + '?pagination=1&id_cat=' + filter.id_cat[0]
             })
         },
         error: function(jqHXR, status, errorThrown) {
@@ -168,16 +162,13 @@ function loadTypes() {
                 },
             })
 
-            $('.cat').on('click', function() {
-                const queryString = window.location.search;
-                const params = new URLSearchParams(queryString)
-                    // console.log($(this).attr('id'));
-
-                params.set('module', 'shop')
-                params.append('id_type', $(this).attr('id'))
-
-                window.history.replaceState({}, '', `${window.location.pathname}?${params}`)
-                window.location.reload()
+            $('.cat').on('click', function(e) {
+                let filter = {
+                    id_cat: [$(e.target).parent()[0].id]
+                }
+    
+                localStorage.setItem('filters', JSON.stringify(filter));
+                window.location.href = friendlyURL('?page=shop') + '?pagination=1&id_cat=' + filter.id_cat[0]
             })
         },
         error: function(jqXHR, status, errorThrown) {
