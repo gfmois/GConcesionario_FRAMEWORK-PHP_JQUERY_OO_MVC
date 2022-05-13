@@ -19,8 +19,6 @@ function setFilters() {
 
     ajaxPromise('POST', url, 'json', {filters: lData, pagination: 1})
         .then((data) => {
-            console.log(data);
-
             if (data != null) {
                 loadCars(data, 0)
             } else {
@@ -32,10 +30,8 @@ function setFilters() {
 
                 if (checkboxActive.length > 0) {
                     loadCars([], 1)
-                    console.log('B');
                 } else {
                     loadCars([], 0)
-                    console.log('C');
                 }
 
             }
@@ -55,7 +51,6 @@ function setFilters() {
                 }
             });
 
-            console.log('Set Load Filters');
             window.history.replaceState({}, '', `${window.location.pathname}?${decodeURIComponent(params)}`)
             pagination(page_n, 1)
         });

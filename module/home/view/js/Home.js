@@ -1,4 +1,5 @@
 import { getNews } from './Get_Load_News.js'
+import { setFilters } from '../../../shop/view/js/set_load_filters.js'
 
 function isOdd(n) {
     if (n % 2 == 0) {
@@ -51,15 +52,16 @@ function loadCarousel() {
             },
         })
 
-        $('.m-card').on('click', function() {
-            const queryString = window.location.search;
-            const params = new URLSearchParams(queryString)
+        $('.m-card').on('click', function(e) {
+            console.log($(e.target).parent()[0].id);
+            let filter = {
+                id_brand: [$(e.target).parent()[0].id]
+            }
 
-            params.set('module', 'shop')
-            params.append('id_brand', $(this).attr('id'))
+            localStorage.setItem('filters', JSON.stringify(filter));
+            setFilters();
 
-            window.history.replaceState({}, '', `${window.location.pathname}?${params}`)
-            window.location.reload()
+            window.location.href = window.location.href.replace('home', 'shop');
         })
     })
 }

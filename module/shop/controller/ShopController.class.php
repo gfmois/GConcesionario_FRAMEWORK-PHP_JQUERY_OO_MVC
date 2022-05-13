@@ -13,11 +13,11 @@
         }
 
         function fromCar() {
-            // echo $_POST["id"];
             echo json_encode(common::loadModel('ShopModel', 'loadFromCar', $_POST['id']));
         }
 
         function fromFilters() {
+            // print_r($_POST);
             echo json_encode(common::loadModel('ShopModel', 'loadFromFilters', [$_POST['filters'] ?? [], $_POST['pagination']]));
         }
 
